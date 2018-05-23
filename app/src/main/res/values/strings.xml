@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Users as Beacons</string>
+    <string name="welcome">Welcome</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="signUp">Sign Up</string>
+    <string name="logOut">Log Out</string>
+    <string name="cbName">Name</string>
+    <string name="cbPhoto">Photo</string>
+    <string name="cbReview">Review</string>
+</resources>
