@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.NavigationView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.NavigationView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#035436">
@@ -19,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="8sp"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             app:srcCompat="@mipmap/uncc_logo_round" />
 
         <LinearLayout
@@ -38,7 +36,7 @@
                 android:text="@string/welcome"
                 android:textAlignment="viewStart"
                 android:textColor="@android:color/holo_orange_light"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,8 +44,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textAlignment="viewStart" />
+                android:gravity="center_horizontal|center"
+                android:padding="8dp"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/holo_orange_light"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.NavigationView>

@@ -8,12 +8,14 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -61,7 +63,7 @@ public class SignUpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView =  inflater.inflate(R.layout.fragment_sign_up, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
         userPhoto = rootView.findViewById(R.id.pick_camera);
         userPhoto.setOnClickListener(new takePhoto());
         createButton = rootView.findViewById(R.id.button_register);
@@ -75,6 +77,32 @@ public class SignUpFragment extends Fragment {
         final EditText textRepPassword = (EditText) rootView.findViewById(R.id.text_repPassword);
         final EditText textPhone = (EditText) rootView.findViewById(R.id.text_phone);
         final EditText textAddress = (EditText) rootView.findViewById(R.id.text_address);
+        final Spinner spinner = rootView.findViewById(R.id.spinner_gender);
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                rootView.getContext(), R.array.gender, android.R.layout.simple_spinner_dropdown_item
+        );
+
+        final int[] genderInt = {0};
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    genderInt[0] = 1;
+                } else if (position == 1) {
+                    genderInt[0] = 2;
+                } else {
+                    genderInt[0] = 3;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+//                Toast.makeText(rootView.getContext(),"Please select a gender.", Toast.LENGTH_SHORT);
+            }
+        });
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +114,7 @@ public class SignUpFragment extends Fragment {
                 String repPassword = textRepPassword.getText().toString().trim();
                 String phone = textPhone.getText().toString().trim();
                 String address = textAddress.getText().toString().trim();
+                String genderSelected = "";
                 Log.d("test", firstName+lastName+email+password+repPassword+phone+address);
 
                 boolean inputValid = true;
@@ -94,6 +123,16 @@ public class SignUpFragment extends Fragment {
                     inputValid = false;
                     Toast.makeText(getContext(),"Please fill up all the fields", Toast.LENGTH_SHORT).show();
 
+                }
+
+                if (genderInt[0] == 0) {
+                    inputValid = false;
+                } else if (genderInt[0] == 1) {
+                    genderSelected = "Female";
+                } else if (genderInt[0] == 2) {
+                    genderSelected = "Male";
+                } else {
+                    genderSelected = "Other";
                 }
 
                 if(bitmap == null){
@@ -109,12 +148,13 @@ public class SignUpFragment extends Fragment {
                 if(inputValid){
                     Bitmap userPhoto = bitmap;
                     //((ImageView)getView().findViewById(R.id.testView)).setImageBitmap(userPhoto);
-                    user = new User(firstName,lastName,email,password,repPassword,phone,address, userPhoto);
+                    user = new User(firstName, lastName, email, password, repPassword, genderSelected, phone, address);
                     userSignUp(user);
-                    ((MenuItem)getView().findViewById(R.id.nav_signUp)).setTitle(R.string.logOut);
-                    ((MenuItem)getView().findViewById(R.id.nav_signUp)).setIcon(R.mipmap.logout_foreground);
+//                    ((MenuItem)getView().findViewById(R.id.nav_signUp)).setTitle(R.string.logOut);
+//                    ((MenuItem)getView().findViewById(R.id.nav_signUp)).setIcon(R.mipmap.logout_foreground);
+                    getActivity().onBackPressed();
                 }
-                getActivity().onBackPressed();
+
 
             }
         });
@@ -152,6 +192,25 @@ public class SignUpFragment extends Fragment {
         mListener = null;
     }
 
+    class takePhoto implements ImageButton.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, CAM_REQ);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAM_REQ) {
+            bitmap = (Bitmap) data.getExtras().get("data");
+            userPhoto.setImageBitmap(bitmap);
+            mListener.onPhotoCaptured(bitmap);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -166,24 +225,9 @@ public class SignUpFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(User user);
 
+        void onPhotoCaptured(Bitmap bitmap);
+
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CAM_REQ){
-            bitmap = (Bitmap) data.getExtras().get("data");
-            userPhoto.setImageBitmap(bitmap);
-        }
-    }
-
-    class takePhoto implements ImageButton.OnClickListener{
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent, CAM_REQ);
-        }
-    }
 
 }

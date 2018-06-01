@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     tools:context=".SignUpFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -28,6 +29,7 @@
                 android:ems="10"
                 android:hint="First Name"
                 android:inputType="textPersonName"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.511"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +45,7 @@
                 android:ems="10"
                 android:hint="Email"
                 android:inputType="textPersonName"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_last" />
@@ -57,6 +60,7 @@
                 android:ems="10"
                 android:hint="Last Name"
                 android:inputType="textPersonName"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_first" />
@@ -69,11 +73,13 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:hint="Create Password"
+                android:hint="Create Password (at least 6 characters)"
                 android:inputType="textPassword"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/test_email" />
+                app:layout_constraintTop_toBottomOf="@+id/spinner_gender" />
 
             <EditText
                 android:id="@+id/text_repPassword"
@@ -85,9 +91,19 @@
                 android:ems="10"
                 android:hint="Repeat Password"
                 android:inputType="textPassword"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_password" />
+
+            <Spinner
+                android:id="@+id/spinner_gender"
+                android:layout_width="206dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/test_email" />
 
             <EditText
                 android:id="@+id/text_phone"
@@ -99,6 +115,7 @@
                 android:ems="10"
                 android:hint="Phone"
                 android:inputType="phone"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_repPassword" />
@@ -113,6 +130,7 @@
                 android:ems="10"
                 android:hint="Address"
                 android:inputType="textPostalAddress"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_phone" />
@@ -132,24 +150,25 @@
 
             <Button
                 android:id="@+id/button_register"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="48dp"
+                android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
                 android:background="#015B46"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:text="Create Account"
                 android:textColor="@android:color/background_light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_address" />
+                app:layout_constraintTop_toBottomOf="@+id/text_address"
+                app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/button_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="99dp"
+                android:layout_height="32dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="48dp"
@@ -161,6 +180,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/button_register"
                 app:layout_constraintTop_toBottomOf="@+id/text_address" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="133dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="4dp"
+                android:paddingTop="4dp"
+                android:text="Gender"
+                app:layout_constraintEnd_toStartOf="@+id/spinner_gender"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/test_email" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
