@@ -1,8 +1,5 @@
 package com.example.mmiazi.uab_v1;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-
 public class User {
 
     private String firstName;
@@ -10,25 +7,17 @@ public class User {
     private String email;
     private String password;
     private String repeatPassword;
+    private String gender;
     private String phone;
     private String address;
-    private Bitmap userPhoto;
-    private Uri imageDownloadUri;
+    private String imageDownloadUrl;
 
-    public Uri getImageDownloadUri() {
-        return imageDownloadUri;
+    public String getImageDownloadUrl() {
+        return imageDownloadUrl;
     }
 
-    public void setImageDownloadUri(Uri imageDownloadUri) {
-        this.imageDownloadUri = imageDownloadUri;
-    }
-
-    public Bitmap getUserPhoto() {
-        return userPhoto;
-    }
-
-    public void setUserPhoto(Bitmap userPhoto) {
-        this.userPhoto = userPhoto;
+    public void setImageDownloadUrl(String imageDownloadUrl) {
+        this.imageDownloadUrl = imageDownloadUrl;
     }
 
     public String getFirstName() {
@@ -87,15 +76,28 @@ public class User {
         this.address = address;
     }
 
-    User(String firstName, String lastName, String email, String password, String repeatPassword, String phone, String address, Bitmap userPhoto){
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    User(String firstName, String lastName, String email, String password, String repeatPassword, String gender, String phone, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.repeatPassword = repeatPassword;
+        this.gender = gender;
+
         this.phone = phone;
         this.address = address;
-        this.userPhoto = userPhoto;
+    }
+
+    public String toString() {
+        return null;
     }
 
 

@@ -1,8 +1,8 @@
 package com.example.mmiazi.uab_v1;
 
-import android.content.Context;
-import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,11 +13,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mmiazi.uab_v1.receivedAds_fragments.Ad1;
+import com.example.mmiazi.uab_v1.receivedAds_fragments.Ad2;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,41 +29,32 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener, Ad1.OnFragmentInteractionListener, Ad2.OnFragmentInteractionListener {
 
     private DrawerLayout mDrawerLayout;
-    private ImageButton userPhoto;
-    private boolean loggedIn;
     private FirebaseAuth mAuth;
-    private StorageReference mStorageRef;
-    private User user;
+    private Bitmap userPhoto;
 
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
-        //TODO: write code here for main functionalities of the user.....
-        currentUserUI(firebaseUser);
-
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        Toast.makeText(this, "Please Log out", Toast.LENGTH_LONG);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mStorageRef= FirebaseStorage.getInstance().getReference();
+
+        userPhoto = null;
 
         Toolbar toolBar = findViewById(R.id.toolbar);
         setSupportActionBar(toolBar);
@@ -67,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        mAuth = FirebaseAuth.getInstance();
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -84,14 +81,21 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                             case R.id.nav_aboutUs:
                                 //Toast.makeText(getApplicationContext(), "About Us pressed!", Toast.LENGTH_SHORT).show();
                                 break;
+                            case R.id.test_tv:
+                                showAds();
+                                break;
                         }
                         return true;
                     }
                 }
         );
+    }
 
+    private void showAds() {
 
-
+        Intent intent = new Intent(this, ShowAdsActivity.class);
+        startActivity(intent);
+        mDrawerLayout.closeDrawers();
     }
 
     public void signUpGUI() {
@@ -104,91 +108,83 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     }
 
     public void currentUserUI(FirebaseUser firebaseUser){
-//        TODO: UI after sign in......
-        if(firebaseUser==null) {
-//            TODO: Firebase user not found.... Sign in or Sign Up....
-        }
+//
     }
 
-    public void createUser(){
-        mAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword())
+    public void createUser(final User user) {
+        Log.d("test", user.getEmail() + " " + user.getPassword());
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull final Task<AuthResult> task) {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Log.d("test", "Create user successful");
-                            final FirebaseUser userFirebase = mAuth.getCurrentUser();
-                            String uID = userFirebase.getUid();
-
-//                          TODO:  Save the user Bitmap to internal storage...
-                            ContextWrapper cw = new ContextWrapper(getApplicationContext());
-                            File directory = cw.getDir("tempImage", Context.MODE_PRIVATE);
-                            File imagePath = new File(directory, "userPhoto.png");
-
-                            FileOutputStream fos = null;
-                            Bitmap bitmap = user.getUserPhoto();
-
-                            //ImageView testView = findViewById(R.id.testView);
-
-                            //testView.setImageBitmap(bitmap);
-
-                            try {
-                                fos = new FileOutputStream(imagePath);
-                                if(bitmap !=null)bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }finally{
-                                try {
-                                    fos.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-
-//                          TODO: Upload the image to Firebase storage...
-
-                            Uri imageFile = Uri.fromFile(imagePath);
-                            StorageReference imageRef = mStorageRef.child("userImages/user_"+uID+".png");
-                            imageRef.putFile(imageFile)
-                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                            user.setImageDownloadUri(downloadUrl);
-                                            updateProfileImageUrl(downloadUrl, userFirebase);
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(),"Image Upload failed",Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                        }else{
-//                            Toast.makeText(getApplicationContext(), "Create account failed: please check all the fields!", Toast.LENGTH_SHORT).show();
-                            Log.d("test", "Create user failure");
-                            Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                            currentUserUI(null);
+                            Log.d("test", "create user with email password successful");
                         }
                     }
-                });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "SignUp Failed: put valid email, phone, and address", Toast.LENGTH_SHORT);
+                        Log.d("test", "create user with email password failed");
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        Log.d("test", "create user with email password successful!");
+                        FirebaseUser usr = mAuth.getCurrentUser();
+                        String uID = usr.getUid();
+
+                        setUpAccount(uID, user);
+
+                        //mRef.child(uID).setValue(user);
+
+                    }
+        });
     }
 
-    private void updateProfileImageUrl(Uri downloadUrl, FirebaseUser userFirebase) {
-        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(downloadUrl)
-                .build();
-        userFirebase.updateProfile(profileChangeRequest)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Log.d("test", "Photo Uploaded!");
-                        }
-                    }
-                });
+    private void setUpAccount(String uID, User user) {
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference dataRef = firebaseDatabase.getReference();
+
+        String photoUrl = "";
+        if (uID != null && user != null) {
+            photoUrl = encodeBitmap(userPhoto, uID);
+        }
+        user.setImageDownloadUrl(photoUrl);
+        ImageView welcomeImage = findViewById(R.id.imageView_Welcome);
+        TextView tv_userName = findViewById(R.id.tv_user);
+
+        dataRef.child("users").child(uID).setValue(user);
+        dataRef.child("currentUser").child("email").setValue(user.getEmail());
+        dataRef.child("currentUser").child("firstName").setValue(user.getFirstName());
+        dataRef.child("currentUser").child("lastName").setValue(user.getLastName());
+        dataRef.child("currentUser").child("gender").setValue(user.getGender());
+        dataRef.child("currentUser").child("uID").setValue(uID);
+        Bitmap decodedBitmap = null;
+        try {
+            decodedBitmap = decodeFromFireBase64(photoUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        welcomeImage.setImageBitmap(decodedBitmap);
+        tv_userName.setText(user.getFirstName() + "!");
+    }
+
+    private Bitmap decodeFromFireBase64(String photoUrl) throws IOException {
+        byte[] decodedByteArray = android.util.Base64.decode(photoUrl, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
+    }
+
+    private String encodeBitmap(Bitmap userPhoto, String uID) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        userPhoto.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        String imageEncoded = "";
+        imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+
+        return imageEncoded;
     }
 
     @Override
@@ -208,9 +204,16 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
     @Override
     public void onFragmentInteraction(User user) {
-        this.user = user;
-//                new User(user.getFirstName(),user.getLastName(),user.getEmail(),user.getPassword(), user.getRepeatPassword(),user.getPhone(),user.getAddress(), user.getUserPhoto());
-        createUser();
+        createUser(user);
     }
 
+    @Override
+    public void onPhotoCaptured(Bitmap bitmap) {
+        userPhoto = bitmap;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

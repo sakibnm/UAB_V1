@@ -17,6 +17,8 @@
             android:icon="@mipmap/about_us_foreground"
             android:title="About Us"
             android:visible="true" />
-        <item android:title="Test ReceivedAds" />
+        <item
+            android:id="@+id/test_tv"
+            android:title="Test ReceivedAds" />
     </group>
 </menu>
