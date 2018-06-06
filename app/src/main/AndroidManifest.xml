@@ -25,7 +25,7 @@
         </activity>
         <activity android:name=".ShowAdsActivity" />
         <activity android:name=".AdvertiseBoughtProductsActivity" />
-        <activity android:name=".NotifAd"></activity>
+        <activity android:name=".NotifAd" />
     </application>
 
 </manifest>

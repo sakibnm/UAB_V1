@@ -2,13 +2,13 @@ package com.example.mmiazi.uab_v1;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -105,11 +105,15 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
 //        TODO: Notifications.................
         firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase.setPersistenceEnabled(true);
         databaseReference = firebaseDatabase.getReference();
+        databaseReference.keepSynced(true);
         String adminPhoto = "https://firebasestorage.googleapis.com/v0/b/uabv1-d5718.appspot.com/o/receivedAds%2FadminPhoto%2FuserPhoto.png?alt=media&token=44ab6a20-334f-41c6-aa21-318572603a22";
         DatabaseReference adminCommand = databaseReference.child("signalFromAdmin").child("command");
-
+        adminCommand.keepSynced(true);
+        adminCommand.setValue("empty");
         DatabaseReference notifAdRef = databaseReference.child("adstoSend");
+        notifAdRef.keepSynced(true);
 
         final AdStruct [] notifAds = new AdStruct[3];
         notifAdRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -119,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     AdStruct ad = data.getValue(AdStruct.class);
                     notifAds[i++] = ad;
+                    Log.d("test", ad.toString());
                 }
             }
 
@@ -128,27 +133,39 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
             }
         });
 
-        adminCommand.addValueEventListener(new ValueEventListener() {
+        adminCommand.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String command = dataSnapshot.getValue().toString().trim();
-                Log.d("test", command+"");
+                String command = "";
+                command = dataSnapshot.getValue().toString().trim();
+                if (command == null) Log.d("test", "received command: null");
+                else Log.d("test", "received command: " + command);
                 CHANNEL_ID = "none";
                 String Notif_Title = "Someone posted a review nearby!";
 
                 switch(command){
                     case "notifyAd1":
                         CHANNEL_ID = "ad1";
+                        Intent intent = new Intent(getApplicationContext(), NotifAd.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra("command", "notifyAd1");
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
                         createNotificationChannel();
-                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                .setSmallIcon(R.drawable.notif_small)
-                                .setContentTitle(Notif_Title)
-                                .setContentText(notifAds[0].getComment())
-                                .setStyle(new NotificationCompat.BigTextStyle()
-                                    .bigText(notifAds[0].getComment()))
-                                .setPriority(NotificationCompat.PRIORITY_HIGH);
-                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                        notificationManager.notify(1, mBuilder.build());
+                        Log.d("test", notifAds[0].toString());
+                        if (notifAds[0].getName() != null && notifAds[0].getComment() != null && notifAds[0].getProductName() != null) {
+                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                                    .setSmallIcon(R.drawable.notif_small)
+                                    .setContentTitle(Notif_Title)
+                                    .setContentText(notifAds[0].getComment())
+                                    .setStyle(new NotificationCompat.BigTextStyle()
+                                            .bigText(notifAds[0].getComment()))
+                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                    .setContentIntent(pendingIntent)
+                                    .setAutoCancel(true);
+
+                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                            notificationManager.notify(1, mBuilder.build());
+                        }
                         break;
                     default:
                         break;
