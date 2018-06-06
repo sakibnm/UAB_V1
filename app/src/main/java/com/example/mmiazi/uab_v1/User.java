@@ -96,8 +96,18 @@ public class User {
         this.address = address;
     }
 
+    @Override
     public String toString() {
-        return null;
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", repeatPassword='" + repeatPassword + '\'' +
+                ", gender='" + gender + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", imageDownloadUrl='" + imageDownloadUrl + '\'' +
+                '}';
     }
-
 }
