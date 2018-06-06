@@ -3,7 +3,6 @@ package com.example.mmiazi.uab_v1;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,21 +18,15 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener{
 
@@ -126,45 +119,45 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                             File imagePath = new File(directory, "userPhoto.png");
 
                             FileOutputStream fos = null;
-                            Bitmap bitmap = user.getUserPhoto();
+//                            Bitmap bitmap = user.getUserPhoto();
 
                             //ImageView testView = findViewById(R.id.testView);
 
                             //testView.setImageBitmap(bitmap);
 
-                            try {
-                                fos = new FileOutputStream(imagePath);
-                                if(bitmap !=null)bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }finally{
-                                try {
-                                    fos.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+//                            try {
+//                                fos = new FileOutputStream(imagePath);
+//                                if(bitmap !=null)bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+//                            } catch (FileNotFoundException e) {
+//                                e.printStackTrace();
+//                            }finally{
+//                                try {
+//                                    fos.close();
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
 
 
 //                          TODO: Upload the image to Firebase storage...
-
-                            Uri imageFile = Uri.fromFile(imagePath);
-                            StorageReference imageRef = mStorageRef.child("userImages/user_"+uID+".png");
-                            imageRef.putFile(imageFile)
-                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                            user.setImageDownloadUri(downloadUrl);
-                                            updateProfileImageUrl(downloadUrl, userFirebase);
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(),"Image Upload failed",Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+//
+//                            Uri imageFile = Uri.fromFile(imagePath);
+//                            StorageReference imageRef = mStorageRef.child("userImages/user_"+uID+".png");
+//                            imageRef.putFile(imageFile)
+//                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                        @Override
+//                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//                                            user.setImageDownloadUri(downloadUrl);
+//                                            updateProfileImageUrl(downloadUrl, userFirebase);
+//                                        }
+//                                    })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            Toast.makeText(getApplicationContext(),"Image Upload failed",Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
 
                         }else{
 //                            Toast.makeText(getApplicationContext(), "Create account failed: please check all the fields!", Toast.LENGTH_SHORT).show();
@@ -176,20 +169,20 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                 });
     }
 
-    private void updateProfileImageUrl(Uri downloadUrl, FirebaseUser userFirebase) {
-        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(downloadUrl)
-                .build();
-        userFirebase.updateProfile(profileChangeRequest)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Log.d("test", "Photo Uploaded!");
-                        }
-                    }
-                });
-    }
+//    private void updateProfileImageUrl(Uri downloadUrl, FirebaseUser userFirebase) {
+//        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+//                .setPhotoUri(downloadUrl)
+//                .build();
+//        userFirebase.updateProfile(profileChangeRequest)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if(task.isSuccessful()){
+//                            Log.d("test", "Photo Uploaded!");
+//                        }
+//                    }
+//                });
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -211,6 +204,11 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         this.user = user;
 //                new User(user.getFirstName(),user.getLastName(),user.getEmail(),user.getPassword(), user.getRepeatPassword(),user.getPhone(),user.getAddress(), user.getUserPhoto());
         createUser();
+    }
+
+    @Override
+    public void onPhotoCaptured(Bitmap bitmap) {
+
     }
 
 }
