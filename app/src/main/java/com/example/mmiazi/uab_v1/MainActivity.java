@@ -1,14 +1,19 @@
 package com.example.mmiazi.uab_v1;
 
-import android.content.Context;
-import android.content.ContextWrapper;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,7 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,14 +33,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener{
@@ -47,6 +51,12 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
     private User user;
+    private String CHANNEL_ID = "Channel";
+    private String notificationCommand = "empty";
+
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+
 
     @Override
     protected void onStart() {
@@ -61,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("signalFromAdmin").child("command");
 
         userPhoto = null;
 
@@ -97,6 +110,66 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                     }
                 }
         );
+
+//        TODO: Notification Listenner..........
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                notificationCommand = dataSnapshot.getValue().toString();
+                if(notificationCommand.equals("notifyAd1") || notificationCommand.equals("notifyAd2") || notificationCommand.equals("notifyAd3")) {
+                    Log.d("test", notificationCommand+"");
+                    createNotification();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void createNotification(){
+        //        TODO: Notification receive.....
+        createNotificationChannel();
+
+        Intent intent = new Intent(getApplicationContext(), NotifAd.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notif)
+                .setContentTitle("Ad Received!")
+                .setContentText("Someone nearby published a product review!")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Someone nearby published a product review!"))
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1, mBuilder.build());
+
+
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void showAds() {

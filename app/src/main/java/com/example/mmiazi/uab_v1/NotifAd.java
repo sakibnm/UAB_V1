@@ -46,7 +46,7 @@ public class NotifAd extends AppCompatActivity {
         databaseReference.keepSynced(true);
         switch (command) {
             case "notifyAd1":
-                DatabaseReference adRef = databaseReference.child("adstoSend");
+                DatabaseReference adRef = databaseReference.child("adstoSend").child("ad1");
                 adRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
