@@ -1,34 +1,23 @@
 package com.example.mmiazi.uab_v1;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.mmiazi.uab_v1.receivedAds_fragments.Ad1;
-import com.example.mmiazi.uab_v1.receivedAds_fragments.Ad2;
-import com.example.mmiazi.uab_v1.receivedAds_fragments.AdStruct;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,38 +25,41 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener, Ad1.OnFragmentInteractionListener, Ad2.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener{
 
     private DrawerLayout mDrawerLayout;
+    private ImageButton userPhoto;
+    private boolean loggedIn;
     private FirebaseAuth mAuth;
-    private Bitmap userPhoto;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-    private String CHANNEL_ID;
+    private StorageReference mStorageRef;
+    private User user;
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Toast.makeText(this, "Please Log out", Toast.LENGTH_LONG);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+        //TODO: write code here for main functionalities of the user.....
+        currentUserUI(firebaseUser);
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        userPhoto = null;
+        mStorageRef= FirebaseStorage.getInstance().getReference();
 
         Toolbar toolBar = findViewById(R.id.toolbar);
         setSupportActionBar(toolBar);
@@ -75,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-
-        mAuth = FirebaseAuth.getInstance();
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -94,112 +84,14 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                             case R.id.nav_aboutUs:
                                 //Toast.makeText(getApplicationContext(), "About Us pressed!", Toast.LENGTH_SHORT).show();
                                 break;
-                            case R.id.test_tv:
-                                showAds();
-                                break;
                         }
                         return true;
                     }
                 }
         );
 
-//        TODO: Notifications.................
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase.setPersistenceEnabled(true);
-        databaseReference = firebaseDatabase.getReference();
-        databaseReference.keepSynced(true);
-        String adminPhoto = "https://firebasestorage.googleapis.com/v0/b/uabv1-d5718.appspot.com/o/receivedAds%2FadminPhoto%2FuserPhoto.png?alt=media&token=44ab6a20-334f-41c6-aa21-318572603a22";
-        DatabaseReference adminCommand = databaseReference.child("signalFromAdmin").child("command");
-        adminCommand.keepSynced(true);
-        adminCommand.setValue("empty");
-        DatabaseReference notifAdRef = databaseReference.child("adstoSend");
-        notifAdRef.keepSynced(true);
 
-        final AdStruct [] notifAds = new AdStruct[3];
-        notifAdRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int i=0;
-                for(DataSnapshot data: dataSnapshot.getChildren()){
-                    AdStruct ad = data.getValue(AdStruct.class);
-                    notifAds[i++] = ad;
-                    Log.d("test", ad.toString());
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        adminCommand.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String command = "";
-                command = dataSnapshot.getValue().toString().trim();
-                if (command == null) Log.d("test", "received command: null");
-                else Log.d("test", "received command: " + command);
-                CHANNEL_ID = "none";
-                String Notif_Title = "Someone posted a review nearby!";
-
-                switch(command){
-                    case "notifyAd1":
-                        CHANNEL_ID = "ad1";
-                        Intent intent = new Intent(getApplicationContext(), NotifAd.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.putExtra("command", "notifyAd1");
-                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                        createNotificationChannel();
-                        Log.d("test", notifAds[0].toString());
-                        if (notifAds[0].getName() != null && notifAds[0].getComment() != null && notifAds[0].getProductName() != null) {
-                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.notif_small)
-                                    .setContentTitle(Notif_Title)
-                                    .setContentText(notifAds[0].getComment())
-                                    .setStyle(new NotificationCompat.BigTextStyle()
-                                            .bigText(notifAds[0].getComment()))
-                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                    .setContentIntent(pendingIntent)
-                                    .setAutoCancel(true);
-
-                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                            notificationManager.notify(1, mBuilder.build());
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void createNotificationChannel(){
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "channels";
-            String description = "channels descriptions";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    private void showAds() {
-
-        Intent intent = new Intent(this, ShowAdsActivity.class);
-        startActivity(intent);
-        mDrawerLayout.closeDrawers();
     }
 
     public void signUpGUI() {
@@ -212,83 +104,91 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     }
 
     public void currentUserUI(FirebaseUser firebaseUser){
-//
+//        TODO: UI after sign in......
+        if(firebaseUser==null) {
+//            TODO: Firebase user not found.... Sign in or Sign Up....
+        }
     }
 
-    public void createUser(final User user) {
-        Log.d("test", user.getEmail() + " " + user.getPassword());
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
+    public void createUser(){
+        mAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull final Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Log.d("test", "create user with email password successful");
+                            Log.d("test", "Create user successful");
+                            final FirebaseUser userFirebase = mAuth.getCurrentUser();
+                            String uID = userFirebase.getUid();
+
+//                          TODO:  Save the user Bitmap to internal storage...
+                            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+                            File directory = cw.getDir("tempImage", Context.MODE_PRIVATE);
+                            File imagePath = new File(directory, "userPhoto.png");
+
+                            FileOutputStream fos = null;
+                            Bitmap bitmap = user.getUserPhoto();
+
+                            //ImageView testView = findViewById(R.id.testView);
+
+                            //testView.setImageBitmap(bitmap);
+
+                            try {
+                                fos = new FileOutputStream(imagePath);
+                                if(bitmap !=null)bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }finally{
+                                try {
+                                    fos.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+//                          TODO: Upload the image to Firebase storage...
+
+                            Uri imageFile = Uri.fromFile(imagePath);
+                            StorageReference imageRef = mStorageRef.child("userImages/user_"+uID+".png");
+                            imageRef.putFile(imageFile)
+                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                            user.setImageDownloadUri(downloadUrl);
+                                            updateProfileImageUrl(downloadUrl, userFirebase);
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(),"Image Upload failed",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                        }else{
+//                            Toast.makeText(getApplicationContext(), "Create account failed: please check all the fields!", Toast.LENGTH_SHORT).show();
+                            Log.d("test", "Create user failure");
+                            Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            currentUserUI(null);
                         }
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
+                });
+    }
+
+    private void updateProfileImageUrl(Uri downloadUrl, FirebaseUser userFirebase) {
+        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(downloadUrl)
+                .build();
+        userFirebase.updateProfile(profileChangeRequest)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "SignUp Failed: put valid email, phone, and address", Toast.LENGTH_SHORT);
-                        Log.d("test", "create user with email password failed");
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.d("test", "Photo Uploaded!");
+                        }
                     }
-                }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        Log.d("test", "create user with email password successful!");
-                        FirebaseUser usr = mAuth.getCurrentUser();
-                        String uID = usr.getUid();
-
-                        setUpAccount(uID, user);
-
-                        //mRef.child(uID).setValue(user);
-
-                    }
-        });
-    }
-
-    private void setUpAccount(String uID, User user) {
-
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference dataRef = firebaseDatabase.getReference();
-
-        String photoUrl = "";
-        if (uID != null && user != null) {
-            photoUrl = encodeBitmap(userPhoto, uID);
-        }
-        user.setImageDownloadUrl(photoUrl);
-        ImageView welcomeImage = findViewById(R.id.imageView_Welcome);
-        TextView tv_userName = findViewById(R.id.tv_user);
-
-        dataRef.child("users").child(uID).setValue(user);
-        dataRef.child("currentUser").child("email").setValue(user.getEmail());
-        dataRef.child("currentUser").child("firstName").setValue(user.getFirstName());
-        dataRef.child("currentUser").child("lastName").setValue(user.getLastName());
-        dataRef.child("currentUser").child("gender").setValue(user.getGender());
-        dataRef.child("currentUser").child("uID").setValue(uID);
-        Bitmap decodedBitmap = null;
-        try {
-            decodedBitmap = decodeFromFireBase64(photoUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        welcomeImage.setImageBitmap(decodedBitmap);
-        tv_userName.setText(user.getFirstName() + "!");
-    }
-
-    private Bitmap decodeFromFireBase64(String photoUrl) throws IOException {
-        byte[] decodedByteArray = android.util.Base64.decode(photoUrl, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
-    }
-
-    private String encodeBitmap(Bitmap userPhoto, String uID) {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        userPhoto.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        String imageEncoded = "";
-        imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-
-        return imageEncoded;
+                });
     }
 
     @Override
@@ -308,16 +208,9 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
     @Override
     public void onFragmentInteraction(User user) {
-        createUser(user);
+        this.user = user;
+//                new User(user.getFirstName(),user.getLastName(),user.getEmail(),user.getPassword(), user.getRepeatPassword(),user.getPhone(),user.getAddress(), user.getUserPhoto());
+        createUser();
     }
 
-    @Override
-    public void onPhotoCaptured(Bitmap bitmap) {
-        userPhoto = bitmap;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }
