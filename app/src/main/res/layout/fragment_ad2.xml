@@ -34,16 +34,15 @@
             android:id="@+id/tv_ad2_Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="236dp"
             android:text="TextView"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_ad2_Comment"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.027"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_ad2_Title" />
+            app:layout_constraintStart_toEndOf="@+id/cardView2" />
 
         <RatingBar
             android:id="@+id/ratingBar_ad2"
@@ -59,21 +58,18 @@
 
         <TextView
             android:id="@+id/tv_ad2_Comment"
-            android:layout_width="198dp"
-            android:layout_height="87dp"
+            android:layout_width="227dp"
+            android:layout_height="69dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:inputType="textMultiLine"
             android:text="TextView"
             android:textStyle="bold"
-            android:inputType="textMultiLine"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/cardView2"
-            app:layout_constraintTop_toBottomOf="@+id/tv_ad2_Name"
-            app:layout_constraintVertical_bias="0.636" />
+            app:layout_constraintStart_toEndOf="@+id/cardView2" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/cardView2"
@@ -89,8 +85,8 @@
             app:cardCornerRadius="35dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.982">
+            app:layout_constraintTop_toBottomOf="@+id/tv_ad2_Name"
+            app:layout_constraintVertical_bias="1.0">
 
             <ImageView
                 android:id="@+id/iv_ad2_photo"

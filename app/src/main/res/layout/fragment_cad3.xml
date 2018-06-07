@@ -70,15 +70,12 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
             android:innerRadius="0dp"
             android:shape="ring"
             android:thicknessRatio="2"
             app:cardCornerRadius="35dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:id="@+id/iv_cad3_photo"
@@ -92,34 +89,31 @@
             android:id="@+id/checkedTextView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="296dp"
             android:text="Share name"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar_cad3" />
+            app:layout_constraintBottom_toTopOf="@+id/checkedTextView3"
+            app:layout_constraintStart_toEndOf="@+id/cardView" />
 
         <CheckedTextView
             android:id="@+id/checkedTextView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="8dp"
             android:text="Share review"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/checkedTextView2" />
+            app:layout_constraintBottom_toTopOf="@+id/checkedTextView4"
+            app:layout_constraintStart_toEndOf="@+id/cardView" />
 
         <CheckedTextView
             android:id="@+id/checkedTextView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="24dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="8dp"
             android:text="Share your photo"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/checkedTextView3"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintStart_toEndOf="@+id/cardView" />
 
     </android.support.constraint.ConstraintLayout>
 

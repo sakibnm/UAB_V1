@@ -37,17 +37,22 @@ public class CAd3 extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CAd3.
+     * this fragment using the provided parameters.
+     * @return A new instance of fragment CAd2.
      */
     // TODO: Rename and change types and number of parameters
-    public static CAd3 newInstance(String param1, String param2) {
+    public static CAd3 newInstance(CAdStruct cad) {
         CAd3 fragment = new CAd3();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        if (cad != null) {
+            args.putString("name", cad.getName());
+            args.putFloat("rating", cad.getRating());
+            args.putString("userPhoto", cad.getUserPhoto());
+            args.putString("productPhoto", cad.getProductPhoto());
+            args.putString("comment", cad.getComment());
+            args.putString("productName", cad.getProductName());
+        }
+
         fragment.setArguments(args);
         return fragment;
     }

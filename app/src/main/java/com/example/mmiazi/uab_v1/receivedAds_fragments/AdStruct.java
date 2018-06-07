@@ -15,12 +15,14 @@ public class AdStruct {
 
     @Override
     public String toString() {
-        return "name = " + name +
-                " rating = " + rating +
-                " productName = " + productName +
-                " comment = " + comment +
-                " userPhoto = " + userPhoto +
-                " productPhoto = " + productPhoto;
+        return "AdStruct{" +
+                "name='" + name + '\'' +
+                ", rating=" + rating +
+                ", productName='" + productName + '\'' +
+                ", comment='" + comment + '\'' +
+                ", userPhoto='" + userPhoto + '\'' +
+                ", productPhoto='" + productPhoto + '\'' +
+                '}';
     }
 
     public String getName() {

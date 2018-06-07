@@ -20,5 +20,8 @@
         <item
             android:id="@+id/test_tv"
             android:title="Test ReceivedAds" />
+        <item
+            android:id="@+id/tv_SendReview"
+            android:title="Test SendReviews" />
     </group>
 </menu>

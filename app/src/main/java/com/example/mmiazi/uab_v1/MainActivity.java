@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,7 +39,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
     private DrawerLayout mDrawerLayout;
     private Bitmap userPhoto;
+    private Uri uriUserPhoto;
     private boolean loggedIn;
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
@@ -140,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notif)
                 .setContentTitle("Ad Received!")
@@ -227,6 +232,28 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference dataRef = firebaseDatabase.getReference();
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference userPhotoRef = mStorageRef.child("userPhotos").child(uID+".jpg");
+
+        Log.d("test", "Uri: "+userPhotoRef);
+
+        if(uriUserPhoto!=null) {
+
+            mStorageRef.putFile(uriUserPhoto)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Uri downloadURL = taskSnapshot.getDownloadUrl();
+                            Log.d("test", "Image URL: " + downloadURL.toString());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("test", e.getMessage());
+                }
+            });
+        }
 
         String photoUrl = "";
         if (uID != null && user != null) {
