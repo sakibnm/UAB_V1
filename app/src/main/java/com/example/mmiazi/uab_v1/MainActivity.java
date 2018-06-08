@@ -109,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                             case R.id.test_tv:
                                 showAds();
                                 break;
+                            case R.id.tv_SendReview:
+                                sendReview();
+                                break;
                         }
                         return true;
                     }
@@ -134,6 +137,12 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
             }
         });
+    }
+
+    private void sendReview() {
+        Intent intent = new Intent(this, SendReviewsActivity.class);
+        startActivity(intent);
+        mDrawerLayout.closeDrawers();
     }
 
     private void createNotification(){

@@ -11,7 +11,9 @@ public class CAdStruct {
     boolean ratingIsChecked;
     boolean commentIsChecked;
     boolean userPhotoIsChecked;
+    CAdStruct(){
 
+    }
     public CAdStruct(String name, float rating, String productName, String comment, String userPhoto, String productPhoto) {
         this.name = name;
         this.rating = rating;
