@@ -81,31 +81,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:src="@android:color/background_light" />
+                android:src="@drawable/user_photo_not_selected" />
         </android.support.v7.widget.CardView>
 
         <CheckedTextView
-            android:id="@+id/checkedTextView2"
+            android:id="@+id/ctv_cad2_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="40dp"
             android:text="Share name"
-            app:layout_constraintBottom_toTopOf="@+id/checkedTextView3"
+            app:layout_constraintBottom_toTopOf="@+id/ctv_cad2_review"
             app:layout_constraintStart_toEndOf="@+id/cardView" />
 
         <CheckedTextView
-            android:id="@+id/checkedTextView3"
+            android:id="@+id/ctv_cad2_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="40dp"
             android:text="Share review"
-            app:layout_constraintBottom_toTopOf="@+id/checkedTextView4"
+            app:layout_constraintBottom_toTopOf="@+id/ctv_cad2_photo"
             app:layout_constraintStart_toEndOf="@+id/cardView" />
 
         <CheckedTextView
-            android:id="@+id/checkedTextView4"
+            android:id="@+id/ctv_cad2_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"

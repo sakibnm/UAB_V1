@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -56,21 +57,23 @@ public class SendReviewsActivity extends AppCompatActivity {
                         Iterable<DataSnapshot> cadsChildren = cadsRef.getChildren();
                         int i = 0;
                         for(DataSnapshot data: cadsChildren){
-                            cads[i] = data.getValue(CAdStruct.class);
+                            CAdStruct cad = data.getValue(CAdStruct.class);
                             String currentUID = dataSnapshot.child("currentUser").child("uID").getValue().toString();
-                            cads[i].setName(dataSnapshot.child("users").child(currentUID).child("firstName").toString()
+                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").toString()
                                     +" "+dataSnapshot.child("users").child(currentUID).child("lastName").toString());
-                            cads[i].setComment("");
-                            cads[i].setCommentIsChecked(false);
-                            cads[i].setNameIsChecked(false);
-                            cads[i].setRating(0);
-                            cads[i].setRatingIsChecked(false);
-                            cads[i].setUserPhoto(dataSnapshot.child("users").child(currentUID).child("imageDownloadUrl").toString());
-                            cads[i].setUserPhotoIsChecked(false);
+                            cad.setComment("");
+                            cad.setCommentIsChecked(false);
+                            cad.setNameIsChecked(false);
+                            cad.setRating(0);
+                            cad.setRatingIsChecked(false);
+                            cad.setUserPhoto(dataSnapshot.child("users").child(currentUID).child("imageDownloadUrl").toString());
+                            cad.setUserPhotoIsChecked(false);
                             Log.d("test", "cads test: "+cads[i].toString());
-                            i++;
+                            cads[i++] = cad;
                         }
-
+                        ViewPager sendReviewsPager = findViewById(R.id.sendReviewsPager);
+                        pagerAdapater = new PagerAdapater(getSupportFragmentManager());
+                        sendReviewsPager.setAdapter(pagerAdapater);
                         break;
 
                     case "male":
@@ -93,6 +96,8 @@ public class SendReviewsActivity extends AppCompatActivity {
     }
 
     private static class PagerAdapater extends FragmentPagerAdapter{
+
+        private static int NUM_ITEMS = 3;
         public PagerAdapater(FragmentManager fm) {
             super(fm);
         }
@@ -113,7 +118,7 @@ public class SendReviewsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 0;
+            return NUM_ITEMS;
         }
     }
 }

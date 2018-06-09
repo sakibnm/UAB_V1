@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:src="@android:color/background_light" />
+                android:src="@drawable/user_photo_not_selected" />
         </android.support.v7.widget.CardView>
 
     </android.support.constraint.ConstraintLayout>
