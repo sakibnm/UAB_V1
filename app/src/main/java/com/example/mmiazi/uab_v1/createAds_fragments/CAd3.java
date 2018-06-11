@@ -1,8 +1,6 @@
 package com.example.mmiazi.uab_v1.createAds_fragments;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -21,12 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mmiazi.uab_v1.R;
 import com.google.firebase.database.DatabaseReference;
@@ -127,9 +125,10 @@ public class CAd3 extends Fragment {
         final RatingBar ratingBarCad3 = view.findViewById(R.id.ratingBar_cad3);
         final CheckBox cb_ratingBarCad3 = view .findViewById(R.id.cb_Rating_cad3);
         final ImageView iv_Cad3_userPhoto  = view.findViewById(R.id.iv_cad3_photo);
-        final CheckedTextView ctv_cad3_name = view.findViewById(R.id.ctv_cad3_name);
-        final CheckedTextView ctv_cad3_review = view.findViewById(R.id.ctv_cad3_review);
-        final CheckedTextView ctv_cad3_photo = view.findViewById(R.id.ctv_cad3_photo);
+        final CheckBox ctv_cad3_name = view.findViewById(R.id.ctv_cad3_name);
+        final CheckBox ctv_cad3_reviewCheck = view.findViewById(R.id.ctv_cad3_reviewCheck);
+        final EditText ctv_cad3_review = view.findViewById(R.id.ctv_cad3_review);
+        final CheckBox ctv_cad3_photo = view.findViewById(R.id.ctv_cad3_photo);
 
         readBundle(getArguments());
 
@@ -144,7 +143,7 @@ public class CAd3 extends Fragment {
         switchCad3.setChecked(false);
         ctv_cad3_name.setChecked(false);
         ctv_cad3_photo.setChecked(false);
-        ctv_cad3_review.setChecked(false);
+        ctv_cad3_reviewCheck.setChecked(false);
 
         cb_ratingBarCad3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,37 +181,19 @@ public class CAd3 extends Fragment {
             }
         });
 
-        ctv_cad3_review.setOnClickListener(new View.OnClickListener() {
+        ctv_cad3_reviewCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(ctv_cad3_review.isChecked()){
-
-                    AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
-                    alert.setTitle("Comment");
-                    alert.setMessage("Please write your comment...");
-                    final EditText input = new EditText(view.getContext());
-                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            String value = input.getText().toString();
-                            // Do something with value!
-                            commentIsChecked = true;
-                            ctv_cad3_review.setText(value);
-                            comment = value;
-                        }
-                    });
-
-                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Canceled.
-                        }
-                    });
-
-
-                }
-                else {
+                String reviewPut = ctv_cad3_review.getText().toString().trim();
+                if(reviewPut.equals("") || reviewPut.equals(null)){
+                    ctv_cad3_reviewCheck.setChecked(false);
+                    Toast.makeText(getContext(),"Please write the review first!", Toast.LENGTH_SHORT).show();
                     commentIsChecked = false;
-                    ctv_cad3_review.setText("Share review");
+                }else if(ctv_cad3_reviewCheck.isChecked()){
+                    commentIsChecked = true;
+                    comment = reviewPut;
+                }else{
+                    commentIsChecked = false;
                 }
             }
         });
