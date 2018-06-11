@@ -31,11 +31,11 @@
             android:layout_marginEnd="4dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:inputType="textMultiLine"
             android:text="TextView"
             android:textAlignment="viewEnd"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:inputType="textMultiLine"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.961"
             app:layout_constraintStart_toStartOf="parent"
@@ -82,36 +82,45 @@
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 android:src="@android:color/background_light" />
+
         </android.support.v7.widget.CardView>
 
-        <CheckedTextView
+        <CheckBox
             android:id="@+id/ctv_cad1_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="241dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginStart="40dp"
-            android:text="Share name"
-            app:layout_constraintBottom_toTopOf="@+id/ctv_cad1_review"
-            app:layout_constraintStart_toEndOf="@+id/cardView" />
-
-        <CheckedTextView
-            android:id="@+id/ctv_cad1_review"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="40dp"
-            android:text="Share review"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Share Name"
             app:layout_constraintBottom_toTopOf="@+id/ctv_cad1_photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/cardView" />
 
-        <CheckedTextView
+        <CheckBox
             android:id="@+id/ctv_cad1_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginStart="40dp"
-            android:text="Share your photo"
+            android:layout_width="241dp"
+            android:layout_height="29dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Share Photo"
+            app:layout_constraintBottom_toTopOf="@+id/ctv_cad1_review"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cardView" />
+
+        <CheckBox
+            android:id="@+id/ctv_cad1_review"
+            android:layout_width="252dp"
+            android:layout_height="62dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Share Review"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView" />
 
     </android.support.constraint.ConstraintLayout>

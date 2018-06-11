@@ -21,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -93,6 +93,7 @@ public class CAd1 extends Fragment {
             args.putBoolean("ratingIsChecked", cad.isRatingIsChecked());
             args.putBoolean("commentIsChecked", cad.isCommentIsChecked());
             args.putBoolean("userPhotoIsChecked", cad.isUserPhotoIsChecked());
+            Log.d("test", "Received Data: "+cad.toString());
         }
 
         fragment.setArguments(args);
@@ -133,9 +134,9 @@ public class CAd1 extends Fragment {
         final RatingBar ratingBarCad1 = view.findViewById(R.id.ratingBar_cad1);
         final CheckBox cb_ratingBarCad1 = view .findViewById(R.id.cb_Rating_cad1);
         final ImageView iv_Cad1_userPhoto  = view.findViewById(R.id.iv_cad1_photo);
-        final CheckedTextView ctv_cad1_name = view.findViewById(R.id.ctv_cad1_name);
-        final CheckedTextView ctv_cad1_review = view.findViewById(R.id.ctv_cad1_review);
-        final CheckedTextView ctv_cad1_photo = view.findViewById(R.id.ctv_cad1_photo);
+        final CheckBox ctv_cad1_name = view.findViewById(R.id.ctv_cad1_name);
+        final CheckBox ctv_cad1_review = view.findViewById(R.id.ctv_cad1_review);
+        final CheckBox ctv_cad1_photo = view.findViewById(R.id.ctv_cad1_photo);
 
         readBundle(getArguments());
 
@@ -189,12 +190,12 @@ public class CAd1 extends Fragment {
             }
         });
 
-        ctv_cad1_review.setOnClickListener(new View.OnClickListener() {
+
+//        TODO: Check if the code updated for checkbox...
+        ctv_cad1_review.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-
-                if(ctv_cad1_review.isChecked()){
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
                     AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
                     alert.setTitle("Comment");
                     alert.setMessage("Please write your comment...");
@@ -214,10 +215,7 @@ public class CAd1 extends Fragment {
                             // Canceled.
                         }
                     });
-
-
-                }
-                else {
+                }else {
                     commentIsChecked = false;
                     ctv_cad1_review.setText("Share review");
                 }
@@ -246,19 +244,7 @@ public class CAd1 extends Fragment {
             public void onClick(View v) {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference().child("currentUser").child("createAd1");
-                class TempStruct{
-                    String ucomment;
-                    String uname;
-                    String uphoto;
-                    String urating;
-                    public TempStruct(String ucomment, String uname, String uphoto, String urating){
-                        this.ucomment = comment;
-                        this.uname = name;
-                        this.uphoto = uphoto;
-                        this.urating = urating;
-                    }
 
-                }
                 if (switchCad1.isChecked()){
                     String currentUserName;
                     String currentUserRating;

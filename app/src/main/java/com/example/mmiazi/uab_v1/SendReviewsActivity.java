@@ -1,5 +1,6 @@
 package com.example.mmiazi.uab_v1;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-public class SendReviewsActivity extends AppCompatActivity {
+public class SendReviewsActivity extends AppCompatActivity implements  CAd1.OnFragmentInteractionListener, CAd2.OnFragmentInteractionListener, CAd3.OnFragmentInteractionListener{
 
     PagerAdapater pagerAdapater;
     String name;
@@ -59,16 +60,16 @@ public class SendReviewsActivity extends AppCompatActivity {
                         for(DataSnapshot data: cadsChildren){
                             CAdStruct cad = data.getValue(CAdStruct.class);
                             String currentUID = dataSnapshot.child("currentUser").child("uID").getValue().toString();
-                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").toString()
-                                    +" "+dataSnapshot.child("users").child(currentUID).child("lastName").toString());
+                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString()
+                                    +" "+dataSnapshot.child("users").child(currentUID).child("lastName").getValue().toString());
                             cad.setComment("");
                             cad.setCommentIsChecked(false);
                             cad.setNameIsChecked(false);
                             cad.setRating(0);
                             cad.setRatingIsChecked(false);
-                            cad.setUserPhoto(dataSnapshot.child("users").child(currentUID).child("imageDownloadUrl").toString());
+                            cad.setUserPhoto(dataSnapshot.child("users").child(currentUID).child("imageDownloadUrl").getValue().toString());
                             cad.setUserPhotoIsChecked(false);
-                            Log.d("test", "cads test: "+cads[i].toString());
+                            if(cads[i] != null)Log.d("test", "cads test: "+cads[i].toString());
                             cads[i++] = cad;
                         }
                         ViewPager sendReviewsPager = findViewById(R.id.sendReviewsPager);
@@ -92,6 +93,16 @@ public class SendReviewsActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 
