@@ -51,11 +51,13 @@ public class SendReviewsActivity extends AppCompatActivity implements  CAd1.OnFr
             public void onDataChange(DataSnapshot dataSnapshot) {
                 gender = dataSnapshot.child("currentUser").child("gender").getValue().toString();
                 Log.d("test", "Gender: "+gender);
-
+                DataSnapshot cadsRef;
+                ViewPager sendReviewsPager;
+                Iterable<DataSnapshot> cadsChildren;
                 switch(gender){
                     case "Female":
-                        DataSnapshot cadsRef = dataSnapshot.child("cads").child("female");
-                        Iterable<DataSnapshot> cadsChildren = cadsRef.getChildren();
+                        cadsRef = dataSnapshot.child("cads").child("female");
+                        cadsChildren = cadsRef.getChildren();
                         int i = 0;
                         for(DataSnapshot data: cadsChildren){
                             CAdStruct cad = data.getValue(CAdStruct.class);
@@ -72,15 +74,57 @@ public class SendReviewsActivity extends AppCompatActivity implements  CAd1.OnFr
                             if(cads[i] != null)Log.d("test", "cads test: "+cads[i].toString());
                             cads[i++] = cad;
                         }
-                        ViewPager sendReviewsPager = findViewById(R.id.sendReviewsPager);
+                        sendReviewsPager = findViewById(R.id.sendReviewsPager);
                         pagerAdapater = new PagerAdapater(getSupportFragmentManager());
                         sendReviewsPager.setAdapter(pagerAdapater);
                         break;
 
                     case "male":
+                        cadsRef = dataSnapshot.child("cads").child("male");
+                        cadsChildren = cadsRef.getChildren();
+                        i = 0;
+                        for(DataSnapshot data: cadsChildren){
+                            CAdStruct cad = data.getValue(CAdStruct.class);
+                            String currentUID = dataSnapshot.child("currentUser").child("uID").getValue().toString();
+                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString()
+                                    +" "+dataSnapshot.child("users").child(currentUID).child("lastName").getValue().toString());
+                            cad.setComment("");
+                            cad.setCommentIsChecked(false);
+                            cad.setNameIsChecked(false);
+                            cad.setRating(0);
+                            cad.setRatingIsChecked(false);
+                            cad.setUserPhoto(dataSnapshot.child("users").child(currentUID).child("imageDownloadUrl").getValue().toString());
+                            cad.setUserPhotoIsChecked(false);
+                            if(cads[i] != null)Log.d("test", "cads test: "+cads[i].toString());
+                            cads[i++] = cad;
+                        }
+                        sendReviewsPager = findViewById(R.id.sendReviewsPager);
+                        pagerAdapater = new PagerAdapater(getSupportFragmentManager());
+                        sendReviewsPager.setAdapter(pagerAdapater);
                         break;
 
                     case "other":
+                        cadsRef = dataSnapshot.child("cads").child("other");
+                        cadsChildren = cadsRef.getChildren();
+                        i = 0;
+                        for(DataSnapshot data: cadsChildren){
+                            CAdStruct cad = data.getValue(CAdStruct.class);
+                            String currentUID = dataSnapshot.child("currentUser").child("uID").getValue().toString();
+                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString()
+                                    +" "+dataSnapshot.child("users").child(currentUID).child("lastName").getValue().toString());
+                            cad.setComment("");
+                            cad.setCommentIsChecked(false);
+                            cad.setNameIsChecked(false);
+                            cad.setRating(0);
+                            cad.setRatingIsChecked(false);
+                            cad.setUserPhoto(dataSnapshot.child("users").child(currentUID).child("imageDownloadUrl").getValue().toString());
+                            cad.setUserPhotoIsChecked(false);
+                            if(cads[i] != null)Log.d("test", "cads test: "+cads[i].toString());
+                            cads[i++] = cad;
+                        }
+                        sendReviewsPager = findViewById(R.id.sendReviewsPager);
+                        pagerAdapater = new PagerAdapater(getSupportFragmentManager());
+                        sendReviewsPager.setAdapter(pagerAdapater);
                         break;
 
                     default:
@@ -98,11 +142,6 @@ public class SendReviewsActivity extends AppCompatActivity implements  CAd1.OnFr
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 
@@ -126,6 +165,7 @@ public class SendReviewsActivity extends AppCompatActivity implements  CAd1.OnFr
                     return null;
             }
         }
+
 
         @Override
         public int getCount() {

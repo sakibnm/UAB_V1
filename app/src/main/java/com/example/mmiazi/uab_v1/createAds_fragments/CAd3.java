@@ -117,6 +117,9 @@ public class CAd3 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReference = firebaseDatabase.getReference();
+
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_cad3, container, false);
 
@@ -159,14 +162,7 @@ public class CAd3 extends Fragment {
             }
         });
 
-        if(ratingBarCad3.isEnabled()){
-            ratingBarCad3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    rating = ratingBarCad3.getRating();
-                }
-            });
-        }
+
         ctv_cad3_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,33 +214,36 @@ public class CAd3 extends Fragment {
         switchCad3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference databaseReference = firebaseDatabase.getReference().child("currentUser").child("createAd3");
-
                 if (switchCad3.isChecked()){
                     String currentUserName;
                     String currentUserRating;
                     String currentUserPhoto;
                     String currentUserComment;
-                    if(nameIsChecked) currentUserName = name;
+                    if(ctv_cad3_name.isChecked()) currentUserName = name;
                     else currentUserName = "false";
 
-                    if(ratingIsChecked) currentUserRating = String.valueOf(rating).trim();
+                    if(cb_ratingBarCad3.isChecked()) currentUserRating = String.valueOf(ratingBarCad3.getRating());
                     else currentUserRating = "false";
 
-                    if(userPhotoIsChecked)currentUserPhoto = userPhoto;
+                    if(ctv_cad3_photo.isChecked())currentUserPhoto = userPhoto;
                     else currentUserPhoto = "false";
 
-                    if(commentIsChecked) currentUserComment = comment;
+                    if(ctv_cad3_reviewCheck.isChecked()){
+                        currentUserComment = ctv_cad3_review.getText().toString();
+                    }
                     else currentUserComment = "false";
 //                    TempStruct currentUser = new TempStruct();
 
                     TempStruct currentUser = new TempStruct(currentUserComment, currentUserName, currentUserPhoto, currentUserRating);
 
-                    databaseReference.setValue(currentUser);
+                    databaseReference.child("currentUser").child("createAd3").setValue(currentUser);
+                    databaseReference.child("signalToAdmin").child("command").setValue("advertised3");
+
                 }else{
                     TempStruct currentUser = new TempStruct("false", "false", "false", "false");
-                    databaseReference.setValue(currentUser);
+                    databaseReference.child("currentUser").child("createAd3").setValue(currentUser);
+                    databaseReference.child("signalToAdmin").child("command").setValue("empty");
+
                 }
 
             }
