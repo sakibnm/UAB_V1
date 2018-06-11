@@ -68,14 +68,12 @@
             android:layout_height="90dp"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="16dp"
             android:innerRadius="0dp"
             android:shape="ring"
             android:thicknessRatio="2"
             app:cardCornerRadius="35dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ctv_cad1_review"
             app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
@@ -89,7 +87,7 @@
 
         <CheckBox
             android:id="@+id/ctv_cad1_name"
-            android:layout_width="280"
+            android:layout_width="280dp"
             android:layout_height="30dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="48dp"
@@ -101,8 +99,8 @@
 
         <CheckBox
             android:id="@+id/ctv_cad1_photo"
-            android:layout_width="280"
-            android:layout_height="29dp"
+            android:layout_width="280dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="48dp"
             android:layout_marginStart="4dp"
@@ -112,14 +110,28 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <CheckBox
-            android:id="@+id/ctv_cad1_review"
+            android:id="@+id/ctv_cad1_reviewCheck"
             android:layout_width="248dp"
-            android:layout_height="86dp"
-            android:layout_marginBottom="20dp"
+            android:layout_height="29dp"
+            android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
             android:text="Share Review"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardView" />
+
+        <EditText
+            android:id="@+id/ctv_cad1_review"
+            android:layout_width="247dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            app:layout_constraintBottom_toTopOf="@+id/ctv_cad1_reviewCheck"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardView" />
 
     </android.support.constraint.ConstraintLayout>
 

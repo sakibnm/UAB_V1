@@ -1,8 +1,6 @@
 package com.example.mmiazi.uab_v1.createAds_fragments;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -21,12 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mmiazi.uab_v1.R;
 import com.google.firebase.database.DatabaseReference;
@@ -135,7 +133,8 @@ public class CAd1 extends Fragment {
         final CheckBox cb_ratingBarCad1 = view .findViewById(R.id.cb_Rating_cad1);
         final ImageView iv_Cad1_userPhoto  = view.findViewById(R.id.iv_cad1_photo);
         final CheckBox ctv_cad1_name = view.findViewById(R.id.ctv_cad1_name);
-        final CheckBox ctv_cad1_review = view.findViewById(R.id.ctv_cad1_review);
+        final CheckBox ctv_cad1_reviewCheck = view.findViewById(R.id.ctv_cad1_reviewCheck);
+        final EditText ctv_cad1_review = view.findViewById(R.id.ctv_cad1_review);
         final CheckBox ctv_cad1_photo = view.findViewById(R.id.ctv_cad1_photo);
 
         readBundle(getArguments());
@@ -151,7 +150,7 @@ public class CAd1 extends Fragment {
         switchCad1.setChecked(false);
         ctv_cad1_name.setChecked(false);
         ctv_cad1_photo.setChecked(false);
-        ctv_cad1_review.setChecked(false);
+        ctv_cad1_reviewCheck.setChecked(false);
 
         cb_ratingBarCad1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,32 +191,19 @@ public class CAd1 extends Fragment {
 
 
 //        TODO: Check if the code updated for checkbox...
-        ctv_cad1_review.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ctv_cad1_reviewCheck.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
-                    alert.setTitle("Comment");
-                    alert.setMessage("Please write your comment...");
-                    final EditText input = new EditText(view.getContext());
-                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            String value = input.getText().toString();
-                            // Do something with value!
-                            commentIsChecked = true;
-                            ctv_cad1_review.setText(value);
-                            comment = value;
-                        }
-                    });
-
-                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Canceled.
-                        }
-                    });
-                }else {
+            public void onClick(View v) {
+                String reviewPut = ctv_cad1_review.getText().toString().trim();
+                if(reviewPut.equals("") || reviewPut.equals(null)){
+                    ctv_cad1_reviewCheck.setChecked(false);
+                    Toast.makeText(getContext(),"Please write the review first!", Toast.LENGTH_SHORT).show();
                     commentIsChecked = false;
-                    ctv_cad1_review.setText("Share review");
+                }else if(ctv_cad1_reviewCheck.isChecked()){
+                    commentIsChecked = true;
+                    comment = reviewPut;
+                }else{
+                    commentIsChecked = false;
                 }
             }
         });
