@@ -1,28 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".createAds_fragments.CAd2">
+    tools:context=".createAds_activities.CAd2Activity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/back_cad2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <Switch
-            android:id="@+id/switchCad2"
-            android:layout_width="93dp"
-            android:layout_height="26dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Share"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/tv_cad2_Title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_cad2_Title"
@@ -133,6 +120,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView2" />
 
+        <ImageView
+            android:id="@+id/switchCad2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/tv_cad2_Title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_share_black_24dp" />
+
     </android.support.constraint.ConstraintLayout>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

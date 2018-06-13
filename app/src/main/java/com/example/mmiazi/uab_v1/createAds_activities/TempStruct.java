@@ -1,4 +1,4 @@
-package com.example.mmiazi.uab_v1.createAds_fragments;
+package com.example.mmiazi.uab_v1.createAds_activities;
 
 class TempStruct{
     String ucomment;

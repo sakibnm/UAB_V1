@@ -1,6 +1,8 @@
-package com.example.mmiazi.uab_v1.createAds_fragments;
+package com.example.mmiazi.uab_v1.createAds_activities;
 
-public class CAdStruct {
+import java.io.Serializable;
+
+public class CAdStruct implements Serializable {
     String name;
     float rating;
     String productName;
