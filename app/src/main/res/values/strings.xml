@@ -16,4 +16,7 @@
     </string-array>
     <string name="channel_name">Channel</string>
     <string name="channel_description">Description</string>
+    <string name="instruction_line_1">Swipe and drag out the left drawer.</string>
+    <string name="instruction_line_2">Please Sign Up using your credentials.</string>
+    <string name="instruction_line_3">Follow the interviewer\'s instructions.</string>
 </resources>

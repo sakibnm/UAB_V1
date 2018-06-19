@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,9 +85,16 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         Toolbar toolBar = findViewById(R.id.toolbar);
         setSupportActionBar(toolBar);
 
+        ((TextView)findViewById(R.id.nav_logout)).setVisibility(View.INVISIBLE);
+        ((TextView)findViewById(R.id.test_tv)).setVisibility(View.GONE);
+        ((TextView)findViewById(R.id.tv_SendReview)).setVisibility(View.GONE);
+
+
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        viewInstructions();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -112,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                             case R.id.tv_SendReview:
                                 sendReview();
                                 break;
+                            case R.id.nav_logout:
+                                logOut();
                         }
                         return true;
                     }
@@ -137,6 +147,23 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
             }
         });
+    }
+
+    private void viewInstructions() {
+        
+    }
+
+    private void logOut() {
+        mAuth.signOut();
+
+//        TODO: Show the menu buttons again...
+        ((TextView)findViewById(R.id.test_tv)).setVisibility(View.GONE);
+        ((TextView)findViewById(R.id.tv_SendReview)).setVisibility(View.GONE);
+        ((TextView)findViewById(R.id.nav_signUp)).setVisibility(View.VISIBLE);
+        ((TextView)findViewById(R.id.nav_logout)).setVisibility(View.INVISIBLE);
+
+
+//        TODO: Cleanup firebase Current User...
     }
 
     private void sendReview() {
@@ -199,6 +226,8 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         transaction.replace(R.id.fragment_holder, signUpFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+        ((TextView)findViewById(R.id.test_tv)).setVisibility(View.VISIBLE);
+        ((TextView)findViewById(R.id.tv_SendReview)).setVisibility(View.VISIBLE);
         mDrawerLayout.closeDrawers();
     }
 

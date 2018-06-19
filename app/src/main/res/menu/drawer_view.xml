@@ -24,4 +24,9 @@
             android:id="@+id/tv_SendReview"
             android:title="Test SendReviews" />
     </group>
+    <group >
+        <item
+            android:id="@+id/nav_logout"
+            android:title="@string/logOut" />
+    </group>
 </menu>
