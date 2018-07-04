@@ -15,14 +15,11 @@
             android:id="@+id/nav_aboutUs"
             android:enabled="true"
             android:icon="@mipmap/about_us_foreground"
-            android:title="About Us"
+            android:title="Instructions"
             android:visible="true" />
         <item
-            android:id="@+id/test_tv"
-            android:title="Test ReceivedAds" />
-        <item
             android:id="@+id/tv_SendReview"
-            android:title="Test SendReviews" />
+            android:title="Create Reviews" />
     </group>
     <group >
         <item

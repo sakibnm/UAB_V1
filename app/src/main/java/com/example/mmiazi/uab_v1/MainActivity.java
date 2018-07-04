@@ -85,9 +85,9 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         Toolbar toolBar = findViewById(R.id.toolbar);
         setSupportActionBar(toolBar);
 
-        ((TextView)findViewById(R.id.nav_logout)).setVisibility(View.INVISIBLE);
-        ((TextView)findViewById(R.id.test_tv)).setVisibility(View.GONE);
-        ((TextView)findViewById(R.id.tv_SendReview)).setVisibility(View.GONE);
+//        ((TextView)findViewById(R.id.nav_logout)).setVisibility(View.INVISIBLE);
+//        ((TextView)findViewById(R.id.test_tv)).setVisibility(View.GONE);
+//        ((TextView)findViewById(R.id.tv_SendReview)).setVisibility(View.GONE);
 
 
         ActionBar actionbar = getSupportActionBar();
