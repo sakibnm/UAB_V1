@@ -5,20 +5,13 @@
         android:checkableBehavior="none"
         android:enabled="true">
         <item
-            android:id="@+id/nav_signUp"
-            android:checkable="false"
-            android:enabled="true"
-            android:icon="@mipmap/sign_up_foreground"
-            android:title="@string/signUp"
-            android:visible="true" />
-        <item
             android:id="@+id/nav_aboutUs"
             android:enabled="true"
             android:icon="@mipmap/about_us_foreground"
             android:title="Instructions"
             android:visible="true" />
         <item
-            android:id="@+id/tv_SendReview"
+            android:id="@+id/nav_SendReview"
             android:title="Create Reviews" />
     </group>
     <group >

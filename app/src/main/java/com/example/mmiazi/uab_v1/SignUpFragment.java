@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -35,7 +36,7 @@ public class SignUpFragment extends Fragment {
 
     private static final int CAM_REQ = 1111;
 
-    private ImageButton userPhoto;
+    private ImageView userPhoto;
     private User user;
     private Button createButton;
     private Button cancelButton;
@@ -70,13 +71,11 @@ public class SignUpFragment extends Fragment {
 
 //        createButtonOnClick(rootView , createButton);
 
+
+
         final EditText textFirst = (EditText) rootView.findViewById(R.id.text_first);
-        final EditText textLast = (EditText) rootView.findViewById(R.id.text_last);
+
         final EditText textEmail = (EditText) rootView.findViewById(R.id.test_email);
-        final EditText textPassword = (EditText) rootView.findViewById(R.id.text_password);
-        final EditText textRepPassword = (EditText) rootView.findViewById(R.id.text_repPassword);
-        final EditText textPhone = (EditText) rootView.findViewById(R.id.text_phone);
-        final EditText textAddress = (EditText) rootView.findViewById(R.id.text_address);
         final Spinner spinner = rootView.findViewById(R.id.spinner_gender);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 rootView.getContext(), R.array.gender, android.R.layout.simple_spinner_dropdown_item
@@ -108,12 +107,12 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String firstName = textFirst.getText().toString().trim();
-                String lastName = textLast.getText().toString().trim();
+                String lastName = "";
                 String email = textEmail.getText().toString().trim();
-                String password = textPassword.getText().toString().trim();
-                String repPassword = textRepPassword.getText().toString().trim();
-                String phone = textPhone.getText().toString().trim();
-                String address = textAddress.getText().toString().trim();
+                String password = "";
+                String repPassword = "";
+                String phone = "";
+                String address = "";
                 String genderSelected = "";
                 Log.d("test", firstName+lastName+email+password+repPassword+phone+address);
 

@@ -22,8 +22,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    private MenuItem navInstructions;
+    private MenuItem navCreateAd;
+    private MenuItem navLogout;
 
 
     @Override
@@ -76,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.getWindow().setSoftInputMode(WindowManager.
+                LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("signalFromAdmin").child("command");
@@ -94,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        viewInstructions();
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -102,25 +109,29 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
         NavigationView navigationView = findViewById(R.id.nav_View);
 
+        Menu menu = navigationView.getMenu();
+        navInstructions = menu.findItem(R.id.nav_aboutUs);
+        navCreateAd = menu.findItem(R.id.nav_SendReview);
+        navLogout = menu.findItem(R.id.nav_logout);
+
+        navInstructions.setVisible(true);
+        navCreateAd.setVisible(false);
+        navLogout.setVisible(false);
+        signUpGUI();
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch(item.getItemId()){
-                            case R.id.nav_signUp:
-                                //Toast.makeText(getApplicationContext(), "Sign Up pressed!", Toast.LENGTH_SHORT).show();
-                                signUpGUI();
-                                break;
                             case R.id.nav_aboutUs:
                                 //Toast.makeText(getApplicationContext(), "About Us pressed!", Toast.LENGTH_SHORT).show();
+                                viewInstructions();
                                 break;
-                            case R.id.test_tv:
-                                showAds();
-                                break;
-                            case R.id.tv_SendReview:
+                            case R.id.nav_SendReview:
                                 sendReview();
-                                break;
                             case R.id.nav_logout:
+                                navCreateAd.setVisible(false);
+                                navLogout.setVisible(false);
                                 logOut();
                         }
                         return true;
@@ -157,10 +168,6 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         mAuth.signOut();
 
 //        TODO: Show the menu buttons again...
-        ((TextView)findViewById(R.id.test_tv)).setVisibility(View.GONE);
-        ((TextView)findViewById(R.id.tv_SendReview)).setVisibility(View.GONE);
-        ((TextView)findViewById(R.id.nav_signUp)).setVisibility(View.VISIBLE);
-        ((TextView)findViewById(R.id.nav_logout)).setVisibility(View.INVISIBLE);
 
 
 //        TODO: Cleanup firebase Current User...
@@ -221,13 +228,12 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     }
 
     public void signUpGUI() {
+        
         SignUpFragment signUpFragment = new SignUpFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_holder, signUpFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-        ((TextView)findViewById(R.id.test_tv)).setVisibility(View.VISIBLE);
-        ((TextView)findViewById(R.id.tv_SendReview)).setVisibility(View.VISIBLE);
         mDrawerLayout.closeDrawers();
     }
 
@@ -351,6 +357,9 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     public void onFragmentInteraction(User user) {
 //                new User(user.getFirstName(),user.getLastName(),user.getEmail(),user.getPassword(), user.getRepeatPassword(),user.getPhone(),user.getAddress(), user.getUserPhoto());
         createUser(user);
+        navLogout.setVisible(true);
+        navCreateAd.setVisible(true);
+        navInstructions.setVisible(true);
     }
 
     @Override
