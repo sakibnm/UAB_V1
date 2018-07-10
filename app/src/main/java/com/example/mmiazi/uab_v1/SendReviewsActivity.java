@@ -3,12 +3,8 @@ package com.example.mmiazi.uab_v1;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -95,8 +91,7 @@ public class SendReviewsActivity extends AppCompatActivity {
                         for(DataSnapshot data: cadsChildren){
                             CAdStruct cad = data.getValue(CAdStruct.class);
                             String currentUID = dataSnapshot.child("currentUser").child("uID").getValue().toString();
-                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString()
-                                    +" "+dataSnapshot.child("users").child(currentUID).child("lastName").getValue().toString());
+                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString());
                             cad.setComment("");
                             cad.setCommentIsChecked(false);
                             cad.setNameIsChecked(false);
@@ -120,15 +115,14 @@ public class SendReviewsActivity extends AppCompatActivity {
 //                        sendReviewsPager.setAdapter(pagerAdapater);
                         break;
 
-                    case "male":
+                    case "Male":
                         cadsRef = dataSnapshot.child("cads").child("male");
                         cadsChildren = cadsRef.getChildren();
                         i = 0;
                         for(DataSnapshot data: cadsChildren){
                             CAdStruct cad = data.getValue(CAdStruct.class);
                             String currentUID = dataSnapshot.child("currentUser").child("uID").getValue().toString();
-                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString()
-                                    +" "+dataSnapshot.child("users").child(currentUID).child("lastName").getValue().toString());
+                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString());
                             cad.setComment("");
                             cad.setCommentIsChecked(false);
                             cad.setNameIsChecked(false);
@@ -152,15 +146,14 @@ public class SendReviewsActivity extends AppCompatActivity {
                         }
                         break;
 
-                    case "other":
+                    case "Other":
                         cadsRef = dataSnapshot.child("cads").child("other");
                         cadsChildren = cadsRef.getChildren();
                         i = 0;
                         for(DataSnapshot data: cadsChildren){
                             CAdStruct cad = data.getValue(CAdStruct.class);
                             String currentUID = dataSnapshot.child("currentUser").child("uID").getValue().toString();
-                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString()
-                                    +" "+dataSnapshot.child("users").child(currentUID).child("lastName").getValue().toString());
+                            cad.setName(dataSnapshot.child("users").child(currentUID).child("firstName").getValue().toString());
                             cad.setComment("");
                             cad.setCommentIsChecked(false);
                             cad.setNameIsChecked(false);

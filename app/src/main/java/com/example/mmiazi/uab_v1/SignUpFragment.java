@@ -72,10 +72,9 @@ public class SignUpFragment extends Fragment {
 //        createButtonOnClick(rootView , createButton);
 
 
+        final EditText textFirst = rootView.findViewById(R.id.text_first);
 
-        final EditText textFirst = (EditText) rootView.findViewById(R.id.text_first);
-
-        final EditText textEmail = (EditText) rootView.findViewById(R.id.test_email);
+        final EditText textEmail = rootView.findViewById(R.id.test_email);
         final Spinner spinner = rootView.findViewById(R.id.spinner_gender);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 rootView.getContext(), R.array.gender, android.R.layout.simple_spinner_dropdown_item
@@ -107,13 +106,13 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String firstName = textFirst.getText().toString().trim();
-                String lastName = "";
+                String lastName = "none";
                 String email = textEmail.getText().toString().trim();
-                String password = "";
-                String repPassword = "";
-                String phone = "";
-                String address = "";
-                String genderSelected = "";
+                String password = "none123456";
+                String repPassword = "none123456";
+                String phone = "none";
+                String address = "none";
+                String genderSelected = "none";
                 Log.d("test", firstName+lastName+email+password+repPassword+phone+address);
 
                 boolean inputValid = true;
