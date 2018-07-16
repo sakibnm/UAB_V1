@@ -23,44 +23,26 @@
 
         <activity android:name=".ShowAdsActivity"
             android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
         </activity>
 
         <activity android:name=".NotifAd"
             android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
         </activity>
 
         <activity android:name=".SendReviewsActivity"
             android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
         </activity>
 
         <activity android:name=".createAds_activities.CAd1Activity"
             android:parentActivityName=".SendReviewsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SendReviewsActivity" />
         </activity>
 
         <activity android:name=".createAds_activities.CAd2Activity">
             android:parentActivityName=".SendReviewsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SendReviewsActivity" />
         </activity>
 
         <activity android:name=".createAds_activities.CAd3Activity">
             android:parentActivityName=".SendReviewsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SendReviewsActivity" />
         </activity>
     </application>
 

@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                                 navCreateAd.setVisible(false);
                                 navLogout.setVisible(false);
                                 logOut();
+                                signUpGUI();
                         }
                         return true;
                     }
@@ -197,10 +199,11 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
 //        Intent backIntent = new (this, MainActivity.class);
 //        backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Intent intent = new Intent(MainActivity.this, NotifAd.class);
+        Intent intent = new Intent(this, NotifAd.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(intent);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
+        final PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notif)
