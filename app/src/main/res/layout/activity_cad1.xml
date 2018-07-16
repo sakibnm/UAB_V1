@@ -13,19 +13,16 @@
 
         <TextView
             android:id="@+id/tv_cad1_Title"
-            android:layout_width="269dp"
-            android:layout_height="99dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="284dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:inputType="textMultiLine"
             android:text="TextView"
             android:textAlignment="viewEnd"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.961"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
@@ -33,11 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toStartOf="@+id/ratingBar_cad1"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_cad1_Title" />
 
         <RatingBar
@@ -77,11 +71,9 @@
             android:layout_width="280dp"
             android:layout_height="30dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="48dp"
             android:layout_marginStart="4dp"
             android:text="Share Name"
             app:layout_constraintBottom_toTopOf="@+id/ctv_cad1_photo"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <CheckBox
@@ -89,11 +81,9 @@
             android:layout_width="280dp"
             android:layout_height="30dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="48dp"
             android:layout_marginStart="4dp"
             android:text="Share Photo"
             app:layout_constraintBottom_toTopOf="@+id/cardView1"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <CheckBox
@@ -122,12 +112,10 @@
 
         <ImageView
             android:id="@+id/switchCad1"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/tv_cad1_Title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_share_black_24dp" />

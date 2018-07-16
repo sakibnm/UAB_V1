@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -28,6 +29,8 @@ public class InstructionsFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private TextView tv_inst1, tv_inst2, tv_inst3;
 
     public InstructionsFragment() {
         // Required empty public constructor
@@ -64,7 +67,17 @@ public class InstructionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_instructions, container, false);
+        View view =  inflater.inflate(R.layout.fragment_instructions, container, false);
+
+        tv_inst1 = view.findViewById(R.id.tv_inst1);
+        tv_inst2 = view.findViewById(R.id.tv_inst2);
+        tv_inst3 = view.findViewById(R.id.tv_inst3);
+
+        tv_inst1.setText("Please follow the the interviewer's prompts.");
+        tv_inst2.setText("Swipe in left drawer in for navigating through the options.");
+        tv_inst3.setText("Thanks for being a user as beacon!");
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

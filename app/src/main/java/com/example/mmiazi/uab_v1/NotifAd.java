@@ -66,27 +66,42 @@ public class NotifAd extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 command = dataSnapshot.child("signalFromAdmin").child("command").getValue().toString();
                 Log.d("test", "Got Command from Admin: "+command);
-
                 AdStruct ad = null;
+                AdStruct ads[] = new AdStruct[3];
                 Iterable<DataSnapshot> datas = dataSnapshot.child("adstoSend").getChildren();
 
+                int i=0;
                 for(DataSnapshot data: datas){
                     ad = data.getValue(AdStruct.class);
-                    Log.d("test", "Got Ads from Admin: "+ad.toString());
+                    ads[i] = ad;
+                    Log.d("test2", "Got Ads from Admin: "+ads[i].toString());
+                    i++;
                 }
 
-                if(ad!=null)switch (command) {
+                if(ads!=null)switch (command) {
                     case "notifyAd1":
-                        ratingBar.setRating(ad.getRating());
-                        tv_Title.setText(ad.getProductName());
-                        tv_Name.setText(ad.getName());
-                        tv_Comment.setText(ad.getComment());
-                        Picasso.get().load(ad.getUserPhoto()).into(iv_User);
-                        new NotifAd.GetImageFromURL().execute(ad.getProductPhoto());
+                        ratingBar.setRating(ads[0].getRating());
+                        tv_Title.setText(ads[0].getProductName());
+                        tv_Name.setText(ads[0].getName());
+                        tv_Comment.setText(ads[0].getComment());
+                        Picasso.get().load(ads[0].getUserPhoto()).into(iv_User);
+                        new NotifAd.GetImageFromURL().execute(ads[0].getProductPhoto());
                         break;
                     case "notifyAd2":
+                        ratingBar.setRating(ads[1].getRating());
+                        tv_Title.setText(ads[1].getProductName());
+                        tv_Name.setText(ads[1].getName());
+                        tv_Comment.setText(ads[1].getComment());
+                        Picasso.get().load(ads[1].getUserPhoto()).into(iv_User);
+                        new NotifAd.GetImageFromURL().execute(ads[1].getProductPhoto());
                         break;
                     case "notifyAd3":
+                        ratingBar.setRating(ads[2].getRating());
+                        tv_Title.setText(ads[2].getProductName());
+                        tv_Name.setText(ads[2].getName());
+                        tv_Comment.setText(ads[2].getComment());
+                        Picasso.get().load(ads[2].getUserPhoto()).into(iv_User);
+                        new NotifAd.GetImageFromURL().execute(ads[2].getProductPhoto());
                         break;
                     default:
                         break;
@@ -107,6 +122,7 @@ public class NotifAd extends AppCompatActivity {
         protected Bitmap doInBackground(String... strings) {
             try {
                 URL url = new URL(strings[0]);
+                Log.d("test3", "Got Ads from Admin: "+url.toString());
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();
@@ -131,5 +147,12 @@ public class NotifAd extends AppCompatActivity {
             Log.d("test", "background set");
 
         }
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.navLogout.setVisible(true);
+        MainActivity.navCreateAd.setVisible(true);
+        MainActivity.navInstructions.setVisible(true);
+        super.onBackPressed();
     }
 }

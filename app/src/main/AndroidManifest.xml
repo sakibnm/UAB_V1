@@ -20,24 +20,48 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ShowAdsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".ShowAdsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
-        <activity android:name=".NotifAd">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".NotifAd"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
-        <activity android:name=".SendReviewsActivity" />
-        <activity android:name=".createAds_activities.CAd1Activity" />
-        <activity android:name=".createAds_activities.CAd2Activity" />
-        <activity android:name=".createAds_activities.CAd3Activity"></activity>
+
+        <activity android:name=".SendReviewsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity android:name=".createAds_activities.CAd1Activity"
+            android:parentActivityName=".SendReviewsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SendReviewsActivity" />
+        </activity>
+
+        <activity android:name=".createAds_activities.CAd2Activity">
+            android:parentActivityName=".SendReviewsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SendReviewsActivity" />
+        </activity>
+
+        <activity android:name=".createAds_activities.CAd3Activity">
+            android:parentActivityName=".SendReviewsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SendReviewsActivity" />
+        </activity>
     </application>
 
 </manifest>

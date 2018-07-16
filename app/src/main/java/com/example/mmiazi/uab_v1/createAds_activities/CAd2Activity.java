@@ -8,9 +8,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mmiazi.uab_v1.R;
-import com.example.mmiazi.uab_v1.SendReviewsActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -175,7 +174,7 @@ public class CAd2Activity extends AppCompatActivity {
 
                     databaseReference.child("currentUser").child("createAd2").setValue(currentUser);
 
-                    databaseReference.child("signalToAdmin").child("command").setValue("advertised1");
+                    databaseReference.child("signalToAdmin").child("command").setValue("advertised2");
                     finish();
                 }
 

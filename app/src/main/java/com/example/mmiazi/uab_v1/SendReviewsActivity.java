@@ -71,7 +71,7 @@ public class SendReviewsActivity extends AppCompatActivity {
         review2 = findViewById(R.id.review2);
         review3 = findViewById(R.id.review3);
 
-        gender = "other";
+        gender = "Other";
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
 
@@ -182,11 +182,14 @@ public class SendReviewsActivity extends AppCompatActivity {
                 }
             }
 
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+
+
 
         review1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,5 +254,15 @@ public class SendReviewsActivity extends AppCompatActivity {
                     ((ImageView) findViewById(R.id.iv_cad3)).setImageBitmap(bitmap);
             }
         }
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        MainActivity.navLogout.setVisible(true);
+        MainActivity.navCreateAd.setVisible(true);
+        MainActivity.navInstructions.setVisible(true);
+        super.onBackPressed();
     }
 }

@@ -4,9 +4,11 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,8 +49,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 
-public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener, InstructionsFragment.OnFragmentInteractionListener{
 
     private DrawerLayout mDrawerLayout;
     private Bitmap userPhoto;
@@ -62,24 +65,29 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    private MenuItem navInstructions;
-    private MenuItem navCreateAd;
-    private MenuItem navLogout;
-
+    public static MenuItem navInstructions;
+    public static MenuItem navCreateAd;
+    public static MenuItem navLogout;
 
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
-        Toast.makeText(this, "PLease log out!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+        if(firebaseUser != null){
+            loggedIn =true;
+            Toast.makeText(this, "Hi "+firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
+        }else{
+            loggedIn = false;
+        }
 
         this.getWindow().setSoftInputMode(WindowManager.
                 LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -117,7 +125,15 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         navInstructions.setVisible(true);
         navCreateAd.setVisible(false);
         navLogout.setVisible(false);
-        signUpGUI();
+
+        if(loggedIn){
+            navInstructions.setVisible(true);
+            navCreateAd.setVisible(true);
+            navLogout.setVisible(true);
+            instructionsGUI();
+        }else{
+            signUpGUI();
+        }
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -125,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
                         switch(item.getItemId()){
                             case R.id.nav_aboutUs:
                                 //Toast.makeText(getApplicationContext(), "About Us pressed!", Toast.LENGTH_SHORT).show();
-                                viewInstructions();
+                                instructionsGUI();
                                 break;
                             case R.id.nav_SendReview:
                                 sendReview();
@@ -160,10 +176,6 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         });
     }
 
-    private void viewInstructions() {
-        
-    }
-
     private void logOut() {
         mAuth.signOut();
 
@@ -183,9 +195,11 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         //        TODO: Notification receive.....
         createNotificationChannel();
 
-        Intent intent = new Intent(getApplicationContext(), NotifAd.class);
+//        Intent backIntent = new (this, MainActivity.class);
+//        backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(MainActivity.this, NotifAd.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -233,6 +247,14 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_holder, signUpFragment);
         transaction.addToBackStack(null);
+        transaction.commit();
+        mDrawerLayout.closeDrawers();
+    }
+
+    public void instructionsGUI(){
+        InstructionsFragment instructionsFragment = new InstructionsFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_holder, instructionsFragment);
         transaction.commit();
         mDrawerLayout.closeDrawers();
     }
@@ -307,12 +329,6 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         ImageView welcomeImage = findViewById(R.id.imageView_Welcome);
         TextView tv_userName = findViewById(R.id.tv_user);
 
-        dataRef.child("users").child(uID).setValue(user);
-        dataRef.child("currentUser").child("email").setValue(user.getEmail());
-        dataRef.child("currentUser").child("firstName").setValue(user.getFirstName());
-        dataRef.child("currentUser").child("lastName").setValue(user.getLastName());
-        dataRef.child("currentUser").child("gender").setValue(user.getGender());
-        dataRef.child("currentUser").child("uID").setValue(uID);
         Bitmap decodedBitmap = null;
         try {
             decodedBitmap = decodeFromFireBase64(photoUrl);
@@ -321,6 +337,16 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         }
         welcomeImage.setImageBitmap(decodedBitmap);
         tv_userName.setText(user.getFirstName() + "!");
+
+        dataRef.child("users").child(uID).setValue(user);
+        dataRef.child("currentUser").child("email").setValue(user.getEmail());
+        dataRef.child("currentUser").child("firstName").setValue(user.getFirstName());
+        dataRef.child("currentUser").child("lastName").setValue(user.getLastName());
+        dataRef.child("currentUser").child("gender").setValue(user.getGender());
+        dataRef.child("currentUser").child("uID").setValue(uID);
+//        dataRef.child("currentUser").child("image").setValue(photoUrl);
+
+
     }
 
     private Bitmap decodeFromFireBase64(String photoUrl) throws IOException {
@@ -360,6 +386,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         navLogout.setVisible(true);
         navCreateAd.setVisible(true);
         navInstructions.setVisible(true);
+        instructionsGUI();
     }
 
     @Override
@@ -368,4 +395,24 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+            //You can replace it with your name
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }
