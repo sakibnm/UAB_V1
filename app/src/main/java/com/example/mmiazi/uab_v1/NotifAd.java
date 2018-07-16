@@ -70,6 +70,7 @@ public class NotifAd extends AppCompatActivity {
                 AdStruct ads[] = new AdStruct[3];
                 Iterable<DataSnapshot> datas = dataSnapshot.child("adstoSend").getChildren();
 
+                int j=0;
                 int i=0;
                 for(DataSnapshot data: datas){
                     ad = data.getValue(AdStruct.class);
