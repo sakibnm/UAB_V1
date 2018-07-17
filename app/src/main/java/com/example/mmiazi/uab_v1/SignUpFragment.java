@@ -117,6 +117,14 @@ public class SignUpFragment extends Fragment {
 
                 boolean inputValid = true;
 
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+                }
+                else{
+                    Toast.makeText(getContext(),"Please put a valid Email address!!!", Toast.LENGTH_SHORT).show();
+                    inputValid = false;
+                }
+
                 if(firstName.equals("")||lastName.equals("")||email.equals("")||phone.equals("")||address.equals("")) {
                     inputValid = false;
                     Toast.makeText(getContext(),"Please fill up all the fields", Toast.LENGTH_SHORT).show();

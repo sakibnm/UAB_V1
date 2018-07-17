@@ -54,6 +54,7 @@ import java.net.InetAddress;
 
 public class MainActivity extends AppCompatActivity implements SignUpFragment.OnFragmentInteractionListener, InstructionsFragment.OnFragmentInteractionListener{
 
+    public static int REQ_CODE = 1111;
     private DrawerLayout mDrawerLayout;
     private Bitmap userPhoto;
     private Uri uriUserPhoto;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     private User user;
     private String CHANNEL_ID = "Channel";
     private String notificationCommand = "empty";
+    private ImageView iv_welcomeImage;
+    private TextView tv_userName;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tv_userName = findViewById(R.id.tv_user);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -180,17 +184,24 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
 
     private void logOut() {
         mAuth.signOut();
-
-//        TODO: Show the menu buttons again...
-
-
-//        TODO: Cleanup firebase Current User...
+        iv_welcomeImage = findViewById(R.id.imageView_Welcome);
+        iv_welcomeImage.setImageResource(R.mipmap.uncc_logo_foreground);
+        if(tv_userName!=null)tv_userName.setText("");
     }
 
     private void sendReview() {
         Intent intent = new Intent(this, SendReviewsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQ_CODE);
         mDrawerLayout.closeDrawers();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQ_CODE){
+            instructionsGUI();
+        }
     }
 
     private void createNotification(){
@@ -330,7 +341,6 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
         }
         user.setImageDownloadUrl(photoUrl);
         ImageView welcomeImage = findViewById(R.id.imageView_Welcome);
-        TextView tv_userName = findViewById(R.id.tv_user);
 
         Bitmap decodedBitmap = null;
         try {
@@ -339,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
             e.printStackTrace();
         }
         welcomeImage.setImageBitmap(decodedBitmap);
-        tv_userName.setText(user.getFirstName() + "!");
+        if(tv_userName!=null)tv_userName.setText(user.getFirstName() + "!");
 
         dataRef.child("users").child(uID).setValue(user);
         dataRef.child("currentUser").child("email").setValue(user.getEmail());
@@ -418,4 +428,5 @@ public class MainActivity extends AppCompatActivity implements SignUpFragment.On
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 }

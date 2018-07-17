@@ -47,6 +47,7 @@ public class NotifAd extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_notif_from_admin_ad);
         ratingBar = findViewById(R.id.ratingBar_Notif);
         tv_Title = findViewById(R.id.tv_Notif_Title);
@@ -156,4 +157,5 @@ public class NotifAd extends AppCompatActivity {
         MainActivity.navInstructions.setVisible(true);
         super.onBackPressed();
     }
+
 }
